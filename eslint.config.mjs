@@ -8,6 +8,7 @@ import prettierConfig from 'eslint-config-prettier';
 
 /** @type {import("eslint").Linter.FlatConfig[]} */
 export default [
+  // TypeScript Files
   {
     files: ['**/*.ts', '**/*.tsx'],
     languageOptions: {
@@ -24,8 +25,16 @@ export default [
     },
     rules: {
       ...pluginTS.configs.recommended.rules,
+      ...pluginTS.configs['recommended-requiring-type-checking'].rules,
+      '@typescript-eslint/no-explicit-any': 'warn',
+      '@typescript-eslint/explicit-function-return-type': ['warn', { allowExpressions: true }],
+      '@typescript-eslint/no-unused-vars': ['error', { argsIgnorePattern: '^_', varsIgnorePattern: '^_' }],
+      '@typescript-eslint/consistent-type-definitions': ['error', 'interface'],
+      '@typescript-eslint/strict-boolean-expressions': 'warn',
     },
   },
+
+  // JavaScript Files
   {
     files: ['**/*.js', '**/*.jsx'],
     languageOptions: {
@@ -36,6 +45,8 @@ export default [
       ...js.configs.recommended.rules,
     },
   },
+
+  // Common rules for both TS/JS
   {
     files: ['**/*.{js,jsx,ts,tsx}'],
     languageOptions: {
@@ -53,10 +64,15 @@ export default [
     },
     rules: {
       ...pluginReact.configs.recommended.rules,
+      ...pluginReact.configs['jsx-runtime'].rules,
       ...pluginReactNative.configs.all.rules,
+      '@typescript-eslint/explicit-function-return-type': 'off',
       'prettier/prettier': 'error',
-      'react/react-in-jsx-scope': 0,
-      'react-native/no-color-literals': 0
+      'react/react-in-jsx-scope': 'off',
+      'react-native/no-color-literals': 'off',
+      'react/jsx-boolean-value': ['error', 'never'],
+      'react/self-closing-comp': 'error',
+      'react-native/no-raw-text': ['warn', { skip: ['CustomText'] }],
     },
     settings: {
       react: {
@@ -64,6 +80,8 @@ export default [
       },
     },
   },
+
+  // Prettier integration
   {
     rules: {
       ...prettierConfig.rules,
