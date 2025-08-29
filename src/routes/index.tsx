@@ -1,8 +1,8 @@
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
-import Home from "../pages/home";
-import Detail from "../pages/detail";
-import Favorites from "../pages/favorites";
+import Home from "../pages/Home";
+import Detail from "../pages/Detail";
+import Favorites from "../pages/Favorites";
 
 // eslint-disable-next-line @typescript-eslint/consistent-type-definitions
 export type StackParamList = {
