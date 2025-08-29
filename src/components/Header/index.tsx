@@ -11,7 +11,7 @@ import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { StackParamList } from "../../routes";
 
-export default function Header() {
+export function Header() {
   const navigation = useNavigation<NativeStackNavigationProp<StackParamList>>();
 
   function handleNavigateFavorite() {
@@ -19,7 +19,7 @@ export default function Header() {
   }
 
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView style={styles.container} edges={["top", "left", "right"]}>
       <Image source={logo as ImageSourcePropType} />
       <Pressable style={styles.button}>
         <Feather
