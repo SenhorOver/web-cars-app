@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "tarefas",
-    "slug": "tarefas",
+    "name": "web-cars",
+    "slug": "web-cars",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
