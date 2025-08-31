@@ -7,7 +7,7 @@ import Favorites from "../pages/Favorites";
 // eslint-disable-next-line @typescript-eslint/consistent-type-definitions
 export type StackParamList = {
   Home: undefined;
-  Detail: undefined;
+  Detail: { id: string };
   Favorites: undefined;
 };
 
