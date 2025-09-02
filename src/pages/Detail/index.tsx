@@ -19,6 +19,7 @@ import { BannerList } from "./components/Bannerlist";
 import { Label } from "./components/Label";
 import * as Linking from "expo-linking";
 import { ModalBanner } from "./components/Modal";
+import useStorage from "../../hooks/useStorage";
 
 // eslint-disable-next-line @typescript-eslint/consistent-type-definitions
 type RouteDetailParams = {
@@ -36,6 +37,7 @@ export default function Detail() {
   const [loading, setLoading] = useState(true);
   const [modalVisible, setModalVisible] = useState(false);
   const [selectedImage, setSelectedImage] = useState("");
+  const { saveItem } = useStorage();
 
   useEffect(() => {
     async function loadCar() {
@@ -99,64 +101,67 @@ export default function Detail() {
     );
   }
 
+  async function handleFavoriteCar() {
+    if (!car) return;
+    await saveItem(car);
+  }
+
   return (
-    <>
-      <ScrollView showsVerticalScrollIndicator={false}>
-        <SafeAreaView>
-          <View style={styles.container}>
-            <Pressable
-              style={styles.backButton}
-              onPress={() => navigation.goBack()}
-            >
-              <Feather name="arrow-left" size={36} color={"#000"} />
+    <ScrollView showsVerticalScrollIndicator={false}>
+      <SafeAreaView>
+        <View style={styles.container}>
+          <Pressable
+            style={styles.backButton}
+            onPress={() => navigation.goBack()}
+          >
+            <Feather name="arrow-left" size={36} color={"#000"} />
+          </Pressable>
+
+          {car?.images && (
+            <BannerList
+              images={car?.images}
+              handleOpenImage={(imageUrl) => handleOpenImage(imageUrl)}
+            />
+          )}
+
+          <View style={styles.header}>
+            <Pressable style={styles.saveContent} onPress={handleFavoriteCar}>
+              <Feather size={22} color={"#fff"} name="bookmark" />
             </Pressable>
 
-            {car?.images && (
-              <BannerList
-                images={car?.images}
-                handleOpenImage={(imageUrl) => handleOpenImage(imageUrl)}
-              />
-            )}
-
-            <View style={styles.header}>
-              <Pressable style={styles.saveContent}>
-                <Feather size={22} color={"#fff"} name="bookmark" />
-              </Pressable>
-
-              <Text style={styles.title}>{car?.name}</Text>
-              <Text>{car?.model}</Text>
-            </View>
-            <View style={styles.content}>
-              <Text style={styles.price}>R$ {car?.price}</Text>
-
-              <View style={styles.labels}>
-                <Label label="Cidade" name={car?.city} />
-                <Label label="Ano" name={car?.year} />
-              </View>
-
-              <View style={styles.labels}>
-                <Label label="KM Rodados" name={car?.km} />
-                <Label label="Telefone" name={car?.whatsapp} />
-              </View>
-              <Text style={styles.description}>Descrição</Text>
-              <View style={styles.descriptionArea}>
-                <Text style={styles.descriptionText}>{car?.description}</Text>
-              </View>
-
-              <Pressable style={styles.callButton} onPress={handleCallPhone}>
-                <Text style={styles.callText}>Conversar com vendedor</Text>
-              </Pressable>
-            </View>
-            <Modal visible={modalVisible} transparent>
-              <ModalBanner
-                closeModal={handleCloseModal}
-                imageUrl={selectedImage}
-              />
-            </Modal>
+            <Text style={styles.title}>{car?.name}</Text>
+            <Text>{car?.model}</Text>
           </View>
-        </SafeAreaView>
-      </ScrollView>
-    </>
+          <View style={styles.content}>
+            <Text style={styles.price}>R$ {car?.price}</Text>
+
+            <View style={styles.labels}>
+              <Label label="Cidade" name={car?.city} />
+              <Label label="Ano" name={car?.year} />
+            </View>
+
+            <View style={styles.labels}>
+              <Label label="KM Rodados" name={car?.km} />
+              <Label label="Telefone" name={car?.whatsapp} />
+            </View>
+            <Text style={styles.description}>Descrição</Text>
+            <View style={styles.descriptionArea}>
+              <Text style={styles.descriptionText}>{car?.description}</Text>
+            </View>
+
+            <Pressable style={styles.callButton} onPress={handleCallPhone}>
+              <Text style={styles.callText}>Conversar com vendedor</Text>
+            </Pressable>
+          </View>
+          <Modal visible={modalVisible} transparent>
+            <ModalBanner
+              closeModal={handleCloseModal}
+              imageUrl={selectedImage}
+            />
+          </Modal>
+        </View>
+      </SafeAreaView>
+    </ScrollView>
   );
 }
 
