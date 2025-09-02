@@ -36,8 +36,9 @@ export default function Home() {
         });
       });
       setCars(listCars);
-      setLoading(false);
-    } catch {
+    } catch (err) {
+      console.log(err);
+    } finally {
       setLoading(false);
     }
   }
@@ -87,7 +88,6 @@ export default function Home() {
 const styles = StyleSheet.create({
   container: {
     alignItems: "center",
-    backgroundColor: "#f3f5f8",
     flex: 0.98,
     marginBottom: 100,
     paddingHorizontal: 14,
