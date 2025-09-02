@@ -18,6 +18,7 @@ export interface CarImageProps {
 export interface CarDetailProps {
   id: string;
   name: string;
+  year: string;
   model: string;
   price: string | number;
   city: string;
