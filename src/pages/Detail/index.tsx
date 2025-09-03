@@ -20,6 +20,7 @@ import { Label } from "./components/Label";
 import * as Linking from "expo-linking";
 import { ModalBanner } from "./components/Modal";
 import useStorage from "../../hooks/useStorage";
+import { useToast } from "../../hooks/useToast";
 
 // eslint-disable-next-line @typescript-eslint/consistent-type-definitions
 type RouteDetailParams = {
@@ -38,6 +39,7 @@ export default function Detail() {
   const [modalVisible, setModalVisible] = useState(false);
   const [selectedImage, setSelectedImage] = useState("");
   const { saveItem } = useStorage();
+  const { showToast } = useToast();
 
   useEffect(() => {
     async function loadCar() {
@@ -93,17 +95,18 @@ export default function Detail() {
     setSelectedImage("");
   }
 
+  async function handleFavoriteCar() {
+    if (!car) return;
+    await saveItem(car);
+    showToast("Carro favoritado com sucesso!", "SUCCESS");
+  }
+
   if (loading) {
     return (
       <SafeAreaView style={styles.loading}>
         <ActivityIndicator size={"large"} color={"#000"} />
       </SafeAreaView>
     );
-  }
-
-  async function handleFavoriteCar() {
-    if (!car) return;
-    await saveItem(car);
   }
 
   return (

@@ -6,11 +6,13 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { CarsProps } from "../../@types/cars.type";
 import { CarItem } from "../../components/CarList";
 import useStorage from "../../hooks/useStorage";
+import { useToast } from "../../hooks/useToast";
 
 export default function Favorites() {
   const navigation = useNavigation();
   const [cars, setCars] = useState<CarsProps[]>([]);
   const { getItem, removeItem } = useStorage();
+  const { showToast } = useToast();
   const isFocused = useIsFocused();
 
   useEffect(() => {
@@ -25,6 +27,7 @@ export default function Favorites() {
   async function handleRemoveCar(id: string) {
     const newCarList = await removeItem(id);
     setCars(newCarList);
+    showToast("Carro removido dos favoritos!", "DEFAULT");
   }
 
   return (
