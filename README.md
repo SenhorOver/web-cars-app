@@ -6,7 +6,7 @@
 
 Essa é a versão do projeto WebCars para mobile.
 
-Projeto feito para usuários poderem ver os anúncios, favoritar, pesquisar por nome e contatar o vendedor em uma plataforma de anúncios de carros.
+Projeto feito com o intuito do usuário poder ver anúncios publicados, favoritar, pesquisar por nome e contatar o vendedor.
 
 ## Layout App
 
