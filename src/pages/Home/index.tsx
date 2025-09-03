@@ -1,8 +1,14 @@
-import { ActivityIndicator, FlatList, StyleSheet, View } from "react-native";
+import {
+  ActivityIndicator,
+  FlatList,
+  Keyboard,
+  StyleSheet,
+  View,
+} from "react-native";
 import { Header } from "../../components/Header";
 import { Input } from "../../components/Input";
-import { useEffect, useState } from "react";
-import { collection, getDocs, orderBy, query } from "firebase/firestore";
+import { useCallback, useEffect, useState } from "react";
+import { collection, getDocs, orderBy, query, where } from "firebase/firestore";
 import { db } from "../../services/firebaseConnection";
 import { CarImageProps, CarsProps } from "../../@types/cars.type";
 import { CarItem } from "../../components/CarList";
@@ -43,6 +49,72 @@ export default function Home() {
     }
   }
 
+  const debounce = (
+    func: (...args: string[]) => Promise<void>,
+    delay: number,
+  ) => {
+    let timeout: NodeJS.Timeout | null = null;
+
+    return (...args: string[]) => {
+      if (timeout) {
+        clearTimeout(timeout);
+      }
+
+      timeout = setTimeout(() => {
+        // eslint-disable-next-line @typescript-eslint/no-floating-promises
+        func(...args);
+      }, delay);
+    };
+  };
+
+  function handleInputChange(text: string) {
+    setSeatchInput(text);
+    delayedApiCall(text);
+  }
+
+  const delayedApiCall = useCallback(
+    debounce(async (newText: string) => await fetchSearchCar(newText), 800),
+    [],
+  );
+
+  async function fetchSearchCar(newText: string) {
+    if (newText === "") {
+      await loadCars();
+      setSeatchInput("");
+      return;
+    }
+
+    try {
+      setCars([]);
+      const q = query(
+        collection(db, "cars"),
+        where("name", ">=", newText.toUpperCase()),
+        where("name", "<=", newText.toUpperCase() + "\uf8ff"),
+      );
+      const querySnapshot = await getDocs(q);
+
+      const listCars: CarsProps[] = [];
+
+      querySnapshot.forEach((doc) => {
+        listCars.push({
+          id: doc.id,
+          city: doc.data().city as string,
+          year: doc.data().year as string,
+          km: doc.data().km as string,
+          name: doc.data().name as string,
+          price: doc.data().price as string,
+          uid: doc.data().uid as string,
+          images: doc.data().images as CarImageProps[],
+        });
+      });
+
+      setCars(listCars);
+      Keyboard.dismiss();
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
   return (
     <>
       <Header />
@@ -51,7 +123,7 @@ export default function Home() {
           <Input
             placeholder="Procurando algum carro?"
             value={searchInput}
-            onChangeText={setSeatchInput}
+            onChangeText={(text) => handleInputChange(text)}
           />
         </View>
         <View>
